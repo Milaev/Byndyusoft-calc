@@ -1,0 +1,16 @@
+.buttonList {
+  display: grid;
+  padding: 37px 48px 44px 46px;
+  grid-template-columns: repeat(4, 80px);
+  gap: 16px 46.6px;
+}
+
+@media (max-width: 767px) { 
+  .buttonList {
+    align-self: normal;
+    display: grid;
+    padding: 0 20px;
+    grid-template-columns: repeat(4, minmax(40px, 1fr));
+    gap: 8px 36px;
+  }
+}
