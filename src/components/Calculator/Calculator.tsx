@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ButtonList from '../ButtonList/ButtonList';
 import Display from '../Display/Display';
-import { evaluate } from 'mathjs';
 import styles from './Calculator.module.css'
+import calculate from './utils';
 
 const SIGNS = [
   'C', '√', '%', '/',
@@ -16,21 +16,30 @@ const Calculator: React.FC = () => {
   const [input, setInput] = useState<string>('');
   const [result, setResult] = useState<string>('');
 
+  const formatResult = (num: number): string => {
+    if (Number.isInteger(num)) {
+        return num.toString();
+    }
+    return num.toFixed(2).toString();
+  }
+
   const handleButtonClick = (value: string) => {
+    console.log(value);
     if (value === 'C') {
       setInput('');
       setResult('');
     } else if (value === '=') {
       try {
-        const evaluatedResult = evaluate(input);
-        setResult(evaluatedResult.toString());
+        const result = calculate(input);
+        setResult(formatResult(result));
       } catch {
         setResult('Error');
       }
     } else if (value === '√') {
       try {
-        const evaluatedResult = Math.sqrt(evaluate(input)).toString();
-        setResult(evaluatedResult);
+        const number = parseFloat(input);
+        const result = Math.sqrt(number);
+        setResult(formatResult(result))
       } catch {
         setResult('Error');
       }
@@ -38,6 +47,25 @@ const Calculator: React.FC = () => {
       setInput(prevInput => prevInput + value);
     }
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const handleKeyDown = (event: KeyboardEvent) => {
+    const { key } = event;
+    if (key === 'Enter') {
+      handleButtonClick('=');
+    } else if (key === 'Escape') {
+      handleButtonClick('C');
+    } else if (SIGNS.includes(key) || !isNaN(Number(key))) {
+      setInput(prevInput => prevInput + key);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
   return (
     <div className={styles.calculator}>

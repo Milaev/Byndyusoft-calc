@@ -8,9 +8,10 @@ interface ButtonListProps {
 }
 
 const ButtonList: React.FC<ButtonListProps> = ({ buttons, onClick }) => {
+  
   return (
     <div className={styles.buttonList}>
-      {buttons.map((button, index) => (
+      {buttons.map((button) => (
         <Button key={button} value={button} onClick={onClick} />
       ))}
     </div>
