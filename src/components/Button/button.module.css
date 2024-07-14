@@ -20,6 +20,12 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
+.button:active,
+.button:focus {
+  border: none;
+  outline: none;
+}
+
 .whiteBackground {
   background: #ffffff;
   color: #2B589A;

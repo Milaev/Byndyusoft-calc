@@ -1,6 +1,6 @@
 function calculate(expression: string): number {
 	expression = expression.replace(/\s+/g, '');
-	
+
 	function evaluate(tokens: string[]): number {
 		let stack: number[] = [];
 		let num = 0;
@@ -14,9 +14,8 @@ function calculate(expression: string): number {
 				num = parseFloat(token);
 			}
 
-			if (token === '%' ) {
+			if (token === '%') {
 				if (lastValue !== null) {
-					console.log(lastValue, num)
 					num = lastValue * (num / 100);
 				} else {
 					num /= 100;
@@ -45,7 +44,7 @@ function calculate(expression: string): number {
 				num = 0;
 			}
 		}
-
+		console.log(stack);
 		return stack.reduce((a, b) => a + b, 0);
 	}
 

@@ -18,19 +18,21 @@ const Calculator: React.FC = () => {
 
   const formatResult = (num: number): string => {
     if (Number.isInteger(num)) {
-        return num.toString();
+      return num.toString();
     }
     return num.toFixed(2).toString();
   }
 
   const handleButtonClick = (value: string) => {
-    console.log(value);
     if (value === 'C') {
       setInput('');
       setResult('');
     } else if (value === '=') {
       try {
         const result = calculate(input);
+        if (!isFinite(result)) {
+          throw new Error('Math Error');
+        }
         setResult(formatResult(result));
       } catch {
         setResult('Error');
@@ -38,6 +40,9 @@ const Calculator: React.FC = () => {
     } else if (value === '√') {
       try {
         const number = parseFloat(input);
+        if (number < 0) {
+          throw new Error('Math Error');
+        }
         const result = Math.sqrt(number);
         setResult(formatResult(result))
       } catch {
@@ -52,6 +57,8 @@ const Calculator: React.FC = () => {
   const handleKeyDown = (event: KeyboardEvent) => {
     const { key } = event;
     if (key === 'Enter') {
+      event.preventDefault();
+      event.stopPropagation();
       handleButtonClick('=');
     } else if (key === 'Escape') {
       handleButtonClick('C');
@@ -66,17 +73,17 @@ const Calculator: React.FC = () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [handleKeyDown]);
-
+   
   return (
     <div className={styles.calculator}>
-      <Display 
-				input={input}
-				result={result}
-			/>
+      <Display
+        input={input}
+        result={result}
+      />
       <ButtonList
-				buttons={SIGNS}
-				onClick={handleButtonClick}
-			/>
+        buttons={SIGNS}
+        onClick={handleButtonClick}
+      />
     </div>
   );
 };
