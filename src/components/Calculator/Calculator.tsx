@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import ButtonList from '../ButtonList/ButtonList';
 import Display from '../Display/Display';
 import styles from './Calculator.module.css'
@@ -23,7 +23,7 @@ const Calculator: React.FC = () => {
     return num.toFixed(2).toString();
   }
 
-  const handleButtonClick = (value: string) => {
+  const handleButtonClick = useCallback((value: string) => {
     if (value === 'C') {
       setInput('');
       setResult('');
@@ -51,10 +51,9 @@ const Calculator: React.FC = () => {
     } else {
       setInput(prevInput => prevInput + value);
     }
-  };
+  }, [input, setInput, setResult]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const handleKeyDown = (event: KeyboardEvent) => {
+  const handleKeyDown = useCallback((event: KeyboardEvent) => {
     const { key } = event;
     if (key === 'Enter') {
       event.preventDefault();
@@ -65,7 +64,7 @@ const Calculator: React.FC = () => {
     } else if (SIGNS.includes(key) || !isNaN(Number(key))) {
       setInput(prevInput => prevInput + key);
     }
-  };
+  }, [handleButtonClick, setInput]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
